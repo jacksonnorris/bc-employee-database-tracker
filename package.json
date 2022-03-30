@@ -9,6 +9,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "console.table": "^0.10.0",
         "express": "^4.17.1",
         "inquirer": "^8.2.2",
         "mysql2": "^2.2.5"
