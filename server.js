@@ -69,7 +69,18 @@ const addEmployee = () => {
                 choices: managersList
             }
         ])
-        let name = info.fName;
+        let firstName = info.fName;
+        let lastName = info.lName;
+        let role = info.role;
+        var roleId = rolesList.indexOf(role);
+        let manager = info.manager;
+        var managerId = managersList.indexOf(manager);
+        db.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`, 
+        [firstName, lastName, roleId, managerId],
+        (err, result) => {
+            console.log(err);
+        });
+        initPrompt();
     }
     addEmployeePrompt();
 }
