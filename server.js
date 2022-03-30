@@ -11,6 +11,8 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+
+
 const db = mysql.createConnection(
     {
         host: 'localhost',
@@ -20,6 +22,21 @@ const db = mysql.createConnection(
     },
     console.log('connection success')
 );
+
+var employeesList = [];
+var rolesList = [];
+db.query('SELECT * FROM employees', function (err, employees) {
+    var e = employees;
+    for (var i in e) {
+       employeesList.push(e[i].first_name + " " + e[i].last_name);
+    }
+});
+db.query('SELECT * FROM roles', function (err, roles) {
+    var r = roles;
+    for (var i in r) {
+        rolesList.push(r[i].title);
+    }
+});
 
 const showEmployees = () => { 
     db.query('SELECT * FROM employees', function (err, results) {
@@ -85,22 +102,8 @@ const addEmployee = () => {
 }
 
 const updateEmployee = async () => {
-    var employeesList = [];
-    var rolesList = [];
-    db.query('SELECT * FROM employees', function (err, employees) {
-        console.log(employees);
-        var e = employees;
-        for (var i in e) {
-            employeesList.push(e[i].first_name + " " + e[i].last_name);
-        }
-        console.log(employeesList)
-    });
-    db.query('SELECT * FROM roles', function (err, roles) {
-        var r = roles;
-        for (var i in r) {
-            rolesList.push(r[i].title);
-        }
-    });
+    console.log(employeesList);
+    console.log(rolesList);
     const updateInfo = await inquirer.prompt([
         {
             type: 'list',
@@ -117,11 +120,11 @@ const updateEmployee = async () => {
     ])
     let employee = updateInfo.update;
     let role = updateInfo.role;
-    let roleId = role.indexOf(role);
-    let employeeId = employee.indexOf(employee);
+    let roleId = rolesList.indexOf(role) + 1;
+    let employeeId = employeesList.indexOf(employee) + 1;
+    // console.log(`roleID ${roleId} employeeId ${employeeId}`)
     db.query(`UPDATE employees SET role_id = ? WHERE id = ?`,
-    [role_id, employeeId],
-    [firstName, lastName, roleId, managerId],
+    [roleId, employeeId],
         (err, result) => {
             console.log(err);
         });
