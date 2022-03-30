@@ -78,6 +78,7 @@ const addEmployee = () => {
         (err, result) => {
             console.log(err);
         });
+        console.log(`Added ${firstName} ${lastName} to the database`);
         initPrompt();
     }
     addEmployeePrompt();
@@ -124,6 +125,7 @@ const addRole = async () => {
     (err, result) => {
         console.log(err);
     });
+    console.log(`Added ${roleName} to the database`);
     initPrompt();
 }
 
@@ -142,6 +144,14 @@ const addDepartment = async () => {
             name: 'dName'
         }
     ])
+    let departmentName = dInfo.dName;
+    db.query('INSERT INTO departments (name) VALUES (?)',
+    [departmentName],
+    (err, result) => {
+        console.log(err);
+    });
+    console.log(`Added ${departmentName} to the database`);
+    initPrompt();
 }
 
 app.use((req, res) => {
