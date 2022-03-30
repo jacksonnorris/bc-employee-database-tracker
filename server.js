@@ -22,6 +22,13 @@ db.query('SELECT * FROM employees', function (err, results) {
     console.table(results);
 });
 
+db.query('SELECT * FROM roles', function (err, results) {
+    console.table(results);
+});
+db.query('SELECT * FROM departments', function (err, results) {
+    console.table(results);
+});
+
 app.use((req, res) => {
     res.status(404).end();
   });
