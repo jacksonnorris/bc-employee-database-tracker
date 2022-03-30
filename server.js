@@ -84,6 +84,51 @@ const addEmployee = () => {
     addEmployeePrompt();
 }
 
+const updateEmployee = async () => {
+    var employeesList = [];
+    var rolesList = [];
+    db.query('SELECT * FROM employees', function (err, employees) {
+        console.log(employees);
+        var e = employees;
+        for (var i in e) {
+            employeesList.push(e[i].first_name + " " + e[i].last_name);
+        }
+        console.log(employeesList)
+    });
+    db.query('SELECT * FROM roles', function (err, roles) {
+        var r = roles;
+        for (var i in r) {
+            rolesList.push(r[i].title);
+        }
+    });
+    const updateInfo = await inquirer.prompt([
+        {
+            type: 'list',
+            message: 'What employee do you want to update the role for?',
+            name: 'update',
+            choices: employeesList
+        },
+        {
+            type: 'list',
+            message: 'What role do you want to change to?',
+            name: 'role',
+            choices: rolesList
+        }
+    ])
+    let employee = updateInfo.update;
+    let role = updateInfo.role;
+    let roleId = role.indexOf(role);
+    let employeeId = employee.indexOf(employee);
+    db.query(`UPDATE employees SET role_id = ? WHERE id = ?`,
+    [role_id, employeeId],
+    [firstName, lastName, roleId, managerId],
+        (err, result) => {
+            console.log(err);
+        });
+    console.log(`Updated ${employee}'s role in the database`);
+    initPrompt();
+}
+
 const showRoles = () => { 
     db.query('SELECT * FROM roles', function (err, results) {
     console.table(results);
@@ -191,7 +236,12 @@ app.use((req, res) => {
     else if (task.task === 'Add Department') {
         addDepartment();
     }
-    
+    else if (task.task === 'Update Employee Role') {
+        updateEmployee();
+    }
+    else if (task.task === 'Quit') {
+
+    }
   }
 
   initPrompt();
